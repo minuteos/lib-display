@@ -271,10 +271,12 @@ protected:
 
     //! Converts data in standard planar 1bpp format to ST7306 cell format
     /*!
-     * Output cells are 12x2 pixels, so width must be a multiple of 12
-     * and height a multiple of 2
+     * @param xCells number of horizonal cells to convert (1 cell = 4 pixels wide)
+     * @param yCells number of vertical cells to convert (1 cell = 2 pixels high)
+     * @param fbStride specifies the stride to the next planar row in fb
+     * @param outStride specifies the stride to the next vertically aligned output cell, i.e. two rows
      */
-    static uint8_t* FormatConvert(const uint8_t* fb, uint8_t* out, unsigned w, unsigned h);
+    static uint8_t* FormatConvert(const uint8_t* fb, uint8_t* out, unsigned xCells, unsigned yCells, unsigned fbStride, unsigned outStride);
 
     #pragma endregion
 

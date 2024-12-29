@@ -57,24 +57,19 @@ ALWAYS_INLINE uint32_t expand(uint32_t a)
     return a;
 }
 
-OPTIMIZE_SIZE uint8_t* ST7306::FormatConvert(const uint8_t* fb, uint8_t* out, unsigned w, unsigned h)
+OPTIMIZE_SIZE uint8_t* ST7306::FormatConvert(const uint8_t* fb, uint8_t* out, unsigned w, unsigned h, unsigned fbStride, unsigned outStride)
 {
-    ASSERT(!(w & 7));
-    ASSERT(!(h & 1));
-
-    w >>= 3;    // bytes
-    h >>= 1;    // halve rows
-
     while (h--)
     {
         // line pointers
         const uint16_t* s1 = (const uint16_t*)fb;
-        fb += w;
+        fb += fbStride;
         const uint16_t* s2 = (const uint16_t*)fb;
-        fb += w;
+        fb += fbStride;
 
         uint32_t ow;
-        uint8_t* end = out + w * 2;
+        uint8_t* end = out + w;
+        uint8_t* next = out + outStride;
         while (out < end)
         {
             // we need to turn
@@ -99,7 +94,7 @@ OPTIMIZE_SIZE uint8_t* ST7306::FormatConvert(const uint8_t* fb, uint8_t* out, un
             }
             else
             {
-                if (out + 2 < end)
+                if (out + 2 <= end)
                 {
                     *(uint16_t*)out = ow;
                     ow >>= 16;
@@ -111,6 +106,7 @@ OPTIMIZE_SIZE uint8_t* ST7306::FormatConvert(const uint8_t* fb, uint8_t* out, un
                 }
             }
         }
+        out = next;
     }
 
     return out;
