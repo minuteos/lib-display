@@ -267,6 +267,46 @@ protected:
 
     #pragma endregion
 
+    #pragma region ID and status access
+
+    union DisplayStatus
+    {
+        uint32_t value;
+        struct
+        {
+            bool : 1;
+            bool dataOrder : 1;
+            bool gateScanOrder : 1;
+            bool : 1;
+            bool mv : 1;
+            bool mx : 1;
+            bool my : 1;
+            bool booster : 1;
+
+            bool normal : 1;
+            bool sleepOut : 1;
+            bool partial : 1;
+            bool lpm : 1;
+            bool packed : 1;
+            bool bgr : 1;
+            bool xde : 1;
+            bool color8 : 1;
+
+            bool : 1;
+            bool te : 1;
+            bool on : 1;
+            bool : 2;
+            bool inv : 1;
+            bool : 1;
+            bool vs : 1;
+        };
+    };
+
+    uint32_t ReadID() { return Read(uint8_t(Command::ReadID) | (3 << 8)); }
+    DisplayStatus ReadStatus() { return { .value = Read(uint8_t(Command::ReadStatus) | (3 << 8)) }; }
+
+    #pragma endregion
+
     #pragma region Helpers for subclasses
 
     //! Converts data in standard planar 1bpp format to ST7306 cell format
@@ -280,7 +320,7 @@ protected:
 
     #pragma endregion
 
-private:
+protected:
     #pragma region Configuration helpers
 
     enum struct Command : uint8_t
@@ -375,6 +415,12 @@ private:
         ASSERT(!(value & ~MASK(bits)));
         return (value & MASK(bits)) << offset;
     }
+
+    #pragma endregion
+
+    #pragma region Readout helpers
+
+    uint32_t Read(uint32_t cmdAndLength);
 
     #pragma endregion
 };

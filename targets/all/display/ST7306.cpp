@@ -43,6 +43,14 @@ void ST7306::Configure(uint32_t cmdAndLength, const char* data)
     WriteData(Span(data, cmdAndLength >> 8));
 }
 
+uint32_t ST7306::Read(uint32_t cmdAndLength)
+{
+    uint32_t data = 0;
+    WriteCommand((uint8_t)cmdAndLength);
+    ReadData(Buffer(&data, (cmdAndLength >> 8) & 3));
+    return data;
+}
+
 ALWAYS_INLINE uint32_t expand(uint32_t a)
 {
     // ____ ____ ____ ____ ABCD EFGH IJKL MNOP
