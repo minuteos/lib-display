@@ -233,8 +233,8 @@ protected:
         float vn2;
     };
     void Configure(SourceGammaVoltage p) { Configure4(Command::GammaVControl,
-        mask((p.vp1 - 2.2) * 50 + 0.5f, 8) |
-        mask((p.vp2 - 1.2) * 50 + 0.5f, 8, 8) |
+        mask((p.vp1 - 2.2f) * 50 + 0.5f, 8) |
+        mask((p.vp2 - 1.2f) * 50 + 0.5f, 8, 8) |
         mask((p.vn1 + 1) * -50 + 0.5f, 8, 16) |
         mask((p.vn2 + 0) * -50 + 0.5f, 8, 24)); }
 
